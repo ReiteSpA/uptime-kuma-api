@@ -681,7 +681,7 @@ class UptimeKumaApi(object):
     @property
     def version(self) -> str:
         info = self.info()
-        return info.get("version")
+        return info.get("version").replace("nightly", "dev")
 
     def _build_monitor_data(
             self,
@@ -809,6 +809,11 @@ class UptimeKumaApi(object):
             "description": description,
             "httpBodyEncoding": httpBodyEncoding,
         }
+        
+        if parse_version(self.version) >= parse_version("1.99"):
+            data.update({
+                "conditions": {},
+            })
 
         if parse_version(self.version) >= parse_version("1.22"):
             data.update({
