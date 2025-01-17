@@ -2256,7 +2256,7 @@ class UptimeKumaApi(object):
             parse_monitor_status(r[i])
         return r
 
-    def get_important_heartbeats(self) -> dict:
+    def get_important_heartbeats(self, id_: int) -> dict:
         """
         Get important heartbeats.
 
@@ -2280,10 +2280,9 @@ class UptimeKumaApi(object):
                 ]
             }
         """
-        r = self._get_event_data(Event.IMPORTANT_HEARTBEAT_LIST)
-        for i in r:
-            int_to_bool(r[i], ["important"])
-            parse_monitor_status(r[i])
+        r = self._call('monitorImportantHeartbeatListPaged', (id_, 0, 25))["data"]
+        int_to_bool(r, ["important"])
+        parse_monitor_status(r)
         return r
 
     # avg ping
